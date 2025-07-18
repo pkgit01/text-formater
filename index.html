@@ -1,1 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <title>Formatador de Texto</title>
+  <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+
+  <h2>Formatador de Texto</h2>
+
+  <label>Texto original:</label>
+  <textarea id="input" placeholder="Cola aqui o texto copiado…"></textarea>
+
+  <div>
+    <button class="btn" onclick="formatTabsToSemicolon()">Tab → ;</button>
+    <button class="btn" onclick="formatSpacesToSemicolon()">Espaços → ;</button>
+    <button class="btn" onclick="formatSpacesToComma()">Espaços → ,</button>
+    <button class="btn" onclick="formatTabsToComma()">Tab → ,</button>
+    <button class="btn" onclick="removeExtraSpaces()">Limpar espaços múltiplos</button>
+    <button class="btn" onclick="splitLinesToColumns()">Linhas → colunas (;) </button>
+    <button class="btn" onclick="resetOutput()">Reiniciar</button>
+    <button class="btn" onclick="copyOutput()">Copiar resultado</button>
+  </div>
+
+  <h3>Resultado:</h3>
+  <div id="output"></div>
+
+  <script src="scripts/main.js"></script>
+</body>
+</html>
 

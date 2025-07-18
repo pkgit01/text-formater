@@ -1,1 +1,27 @@
+body {
+  font-family: sans-serif;
+  padding: 20px;
+}
+
+textarea {
+  width: 100%;
+  height: 150px;
+  margin-bottom: 10px;
+  font-family: monospace;
+  white-space: pre;
+}
+
+.btn {
+  margin: 5px 3px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+#output {
+  background: #f1f1f1;
+  padding: 10px;
+  white-space: pre-wrap;
+  border: 1px solid #ccc;
+  min-height: 100px;
+}
 

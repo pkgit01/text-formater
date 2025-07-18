@@ -52,23 +52,23 @@ function copyOutput() {
 }
 
 function tratarTabelaColada() {
-  const input = getInput().replace(/\n/g, '');
+  const input = getInput()
+    .replace(/\n/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
 
-  // Remove cabeçalhos como "NúmerosNúmero de saídas..."
-  const textoLimpo = input.replace(/^.*?\*/, ''); // remove tudo até ao asterisco
-
-  const padrao = /(\d{1,2})(\d{1,3},\d{2})(\d{2}\/\d{4})(\d{2}\/\d{2}\/\d{4})(\d{1,3})/g;
+  const padrao = /(\d{1,2})\s+(\d{1,3})\s+(\d{1,3},\d{2})\s+(\d{2,3}\/\d{4})\s+(\d{2}\/\d{2}\/\d{4})\s+(\d{1,3})/g;
 
   const linhas = [];
   let match;
-  while ((match = padrao.exec(textoLimpo)) !== null) {
-    linhas.push(`${match[1]};${match[2]};${match[3]};${match[4]};${match[5]}`);
+
+  while ((match = padrao.exec(input)) !== null) {
+    linhas.push(`${match[1]};${match[2]};${match[3]};${match[4]};${match[5]};${match[6]}`);
   }
 
   if (linhas.length === 0) {
-    setOutput("⚠️ Não foram encontrados padrões válidos. Verifica se os dados têm o seguinte formato:\n\n[NUMERO][VALOR][##/####][DD/MM/AAAA][AUSÊNCIA]");
+    setOutput("⚠️ Não foi possível extrair colunas. Verifica se os dados têm espaços visíveis entre eles ou adapta o padrão.");
   } else {
     setOutput(linhas.join('\n'));
   }
 }
-

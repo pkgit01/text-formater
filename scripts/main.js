@@ -72,3 +72,33 @@ function tratarTabelaColada() {
     setOutput(linhas.join('\n'));
   }
 }
+function tratarTodasColunas() {
+  const tokens = getInput().match(/\S+/g) || [];
+  if (tokens.length === 0) {
+    setOutput("⚠️ Nenhum dado detectado...");
+    return;
+  }
+  const n = parseInt(prompt("Quantos campos por linha?", "6"), 10) || 6;
+  const lines = [];
+  for (let i = 0; i + n <= tokens.length; i += n) {
+    lines.push(tokens.slice(i, i + n).join(';'));
+  }
+  setOutput(lines.join('\n'));
+}
+
+function tratarPorEspacos() {
+  const lines = getInput().trim().split(/\r?\n/);
+  const result = lines.map(line =>
+    line.trim().split(/\s+/).join(';')
+  );
+  setOutput(result.join('\n'));
+}
+
+function tratarPorTab() {
+  const lines = getInput().trim().split(/\r?\n/);
+  const result = lines.map(line =>
+    line.split('\t').join(';')
+  );
+  setOutput(result.join('\n'));
+}
+

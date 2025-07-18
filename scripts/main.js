@@ -53,18 +53,22 @@ function copyOutput() {
 
 function tratarTabelaColada() {
   const input = getInput().replace(/\n/g, '');
+
+  // Remove cabeçalhos como "NúmerosNúmero de saídas..."
+  const textoLimpo = input.replace(/^.*?\*/, ''); // remove tudo até ao asterisco
+
   const padrao = /(\d{1,2})(\d{1,3},\d{2})(\d{2}\/\d{4})(\d{2}\/\d{2}\/\d{4})(\d{1,3})/g;
 
   const linhas = [];
-  const matches = [...input.matchAll(padrao)];
-
-  for (const m of matches) {
-    linhas.push(`${m[1]};${m[2]};${m[3]};${m[4]};${m[5]}`);
+  let match;
+  while ((match = padrao.exec(textoLimpo)) !== null) {
+    linhas.push(`${match[1]};${match[2]};${match[3]};${match[4]};${match[5]}`);
   }
 
   if (linhas.length === 0) {
-    alert("Não foi possível extrair colunas. Verifica o texto ou adapta o padrão.");
+    setOutput("⚠️ Não foram encontrados padrões válidos. Verifica se os dados têm o seguinte formato:\n\n[NUMERO][VALOR][##/####][DD/MM/AAAA][AUSÊNCIA]");
   } else {
     setOutput(linhas.join('\n'));
   }
 }
+

@@ -219,3 +219,69 @@ function gerarTabela() {
 
   document.getElementById('preview').innerHTML = html;
 }
+function autoExtrair() {
+  const texto = getInput();
+  const resultados = [];
+
+  // 🔹 Estratégia: Tentar extrair colagem compacta (sem separadores)
+  const matchCabecalho = texto.trim().match(/^([^\d]+)(\d.*)$/s);
+  if (matchCabecalho) {
+    const cabecalhoBruto = matchCabecalho[1]
+      .replace(/([a-zà-ú])([A-ZÁ-Ú])/g, '$1\t$2')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    const cabecalho = cabecalhoBruto
+      .replace(/ +/g, ' ')
+      .replace(/ %/g, '%')
+      .replace(/ \*/g, '*')
+      .split(/\t+/);
+
+    const dados = matchCabecalho[2].match(/(\d{3}\/\d{4}|\d{2}\/\d{2}\/\d{4}|\d+,\d+|\d+)/g);
+
+    if (dados && dados.length % cabecalho.length === 0) {
+      const linhas = [];
+      linhas.push(cabecalho.join(';'));
+      for (let i = 0; i < dados.length; i += cabecalho.length) {
+        linhas.push(dados.slice(i, i + cabecalho.length).join(';'));
+      }
+      resultados.push({ nome: "Colagem Compacta Sem Separadores", linhas });
+    }
+  }
+function formatarTabelaCompacta() {
+  const texto = getInput().trim();
+
+  const matchCabecalho = texto.match(/^([^\d]+)(\d.*)$/s);
+  if (!matchCabecalho) {
+    setOutput('⚠️ Formato não reconhecido.');
+    return;
+  }
+
+  const cabecalhoBruto = matchCabecalho[1]
+    .replace(/([a-zà-ú])([A-ZÁ-Ú])/g, '$1\t$2')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  const cabecalho = cabecalhoBruto
+    .replace(/ +/g, ' ')
+    .replace(/ %/g, '%')
+    .replace(/ \*/g, '*')
+    .split(/\t+/);
+
+  const dados = matchCabecalho[2].match(/(\d{3}\/\d{4}|\d{2}\/\d{2}\/\d{4}|\d+,\d+|\d+)/g);
+
+  if (!dados || dados.length % cabecalho.length !== 0) {
+    setOutput('⚠️ Número de dados não compatível com o número de colunas.');
+    return;
+  }
+
+  const linhas = [];
+  linhas.push(cabecalho.join('\t'));
+
+  for (let i = 0; i < dados.length; i += cabecalho.length) {
+    linhas.push(dados.slice(i, i + cabecalho.length).join('\t'));
+  }
+
+  setOutput(linhas.join('\n'));
+}
+

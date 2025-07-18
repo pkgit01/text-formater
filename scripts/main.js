@@ -72,6 +72,7 @@ function tratarTabelaColada() {
     setOutput(linhas.join('\n'));
   }
 }
+
 function tratarTodasColunas() {
   const tokens = getInput().match(/\S+/g) || [];
   if (tokens.length === 0) {
@@ -154,6 +155,7 @@ function autoExtrair() {
     setOutput(`🧠 Melhor resultado automático: ${melhor.nome}\n\n` + melhor.linhas.join('\n'));
   }
 }
+
 function extrairDeTextoHTML() {
   const input = getInput();
 
@@ -180,3 +182,40 @@ function extrairDeTextoHTML() {
   setOutput(resultado.join('\n'));
 }
 
+
+// Interface interativa para pré-visualização editável
+
+function gerarTabela() {
+  const texto = getInput().trim();
+  const sep = document.getElementById('separator').value;
+  const nCols = parseInt(document.getElementById('numCols').value);
+
+  let tokens;
+  if (sep === 'space') {
+    tokens = texto.match(/\S+/g) || [];
+  } else if (sep === 'tab') {
+    tokens = texto.split(/\t+/);
+  } else if (sep === 'semicolon') {
+    tokens = texto.split(';');
+  } else if (sep === 'comma') {
+    tokens = texto.split(',');
+  }
+
+  const rows = [];
+  for(let i=0; i + nCols <= tokens.length; i += nCols) {
+    rows.push(tokens.slice(i, i + nCols));
+  }
+
+  // Montar tabela HTML para pré-visualização
+  let html = '<table border="1" cellpadding="5" style="border-collapse: collapse;">';
+  rows.forEach(row => {
+    html += '<tr>';
+    row.forEach(cell => {
+      html += `<td contenteditable="true">${cell.trim()}</td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</table>';
+
+  document.getElementById('preview').innerHTML = html;
+}

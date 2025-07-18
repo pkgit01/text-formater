@@ -102,3 +102,55 @@ function tratarPorTab() {
   setOutput(result.join('\n'));
 }
 
+function autoExtrair() {
+  const texto = getInput();
+  const resultados = [];
+
+  // 1. Regex com padrão fixo
+  const padrao = /(\d{1,2})\s+(\d{1,3})\s+(\d{1,3},\d{2})\s+(\d{2,3}\/\d{4})\s+(\d{2}\/\d{2}\/\d{4})\s+(\d{1,3})/g;
+  const linhasRegex = [];
+  let match;
+  while ((match = padrao.exec(texto.replace(/\s+/g, ' '))) !== null) {
+    linhasRegex.push(`${match[1]};${match[2]};${match[3]};${match[4]};${match[5]};${match[6]}`);
+  }
+  if (linhasRegex.length > 0) {
+    resultados.push({ nome: "Regex Padrão Fixo", linhas: linhasRegex });
+  }
+
+  // 2. Separação por espaços
+  const porEspacos = texto.trim().split(/\r?\n/).map(l =>
+    l.trim().split(/\s+/).join(';')
+  );
+  if (porEspacos.length > 1 && porEspacos.some(l => l.includes(';'))) {
+    resultados.push({ nome: "Separação por Espaços", linhas: porEspacos });
+  }
+
+  // 3. Separação por tabulação
+  const porTab = texto.trim().split(/\r?\n/).map(l =>
+    l.split('\t').join(';')
+  );
+  if (porTab.length > 1 && porTab.some(l => l.includes(';'))) {
+    resultados.push({ nome: "Separação por Tab", linhas: porTab });
+  }
+
+  // 4. Agrupamento de tokens com \S+ por N colunas
+  const tokens = texto.match(/\S+/g) || [];
+  const n = 6;
+  const blocos = [];
+  for (let i = 0; i + n <= tokens.length; i += n) {
+    blocos.push(tokens.slice(i, i + n).join(';'));
+  }
+  if (blocos.length > 0) {
+    resultados.push({ nome: `Match \\S+ agrupado por ${n}`, linhas: blocos });
+  }
+
+  // Selecionar o melhor com mais linhas válidas
+  resultados.sort((a, b) => b.linhas.length - a.linhas.length);
+
+  if (resultados.length === 0) {
+    setOutput("⚠️ Não foi possível extrair colunas. Verifica o texto ou tenta outro método.");
+  } else {
+    const melhor = resultados[0];
+    setOutput(`🧠 Melhor resultado automático: ${melhor.nome}\n\n` + melhor.linhas.join('\n'));
+  }
+}

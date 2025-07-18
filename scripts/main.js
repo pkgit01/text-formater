@@ -154,3 +154,29 @@ function autoExtrair() {
     setOutput(`🧠 Melhor resultado automático: ${melhor.nome}\n\n` + melhor.linhas.join('\n'));
   }
 }
+function extrairDeTextoHTML() {
+  const input = getInput();
+
+  // Cria parser para HTML
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(input, 'text/html');
+
+  // Seleciona as linhas da tabela, conforme estrutura que mostraste
+  const linhas = doc.querySelectorAll('.sortTable .betMiddle .colums');
+
+  if (linhas.length === 0) {
+    setOutput("⚠️ Não detectei estrutura da tabela no texto HTML colado.");
+    return;
+  }
+
+  const resultado = [];
+
+  linhas.forEach(ul => {
+    // Extrai o texto de cada <li> e junta com ';'
+    const cols = Array.from(ul.querySelectorAll('li')).map(li => li.textContent.trim());
+    resultado.push(cols.join(';'));
+  });
+
+  setOutput(resultado.join('\n'));
+}
+
